@@ -22,7 +22,7 @@ RegExp::bexec = (str) ->
   return m  if m and m.index is i
   null
 
-String::tokens = ->
+String::tokens = ->                                           #el meétodo tokens es un método de las cadenas
   from = undefined # The index of the start of the token.
   i = 0 # The index of the current character.
   n = undefined # The number value.
@@ -107,10 +107,10 @@ String::tokens = ->
 parse = (input) ->
   tokens = input.tokens()
   lookahead = tokens.shift()
-  match = (t) ->
-    if lookahead.type is t
-      lookahead = tokens.shift()
-      lookahead = null  if typeof lookahead is "undefined"
+  match = (t) ->                                              #match es una funcion que recibe como argumento el token t
+    if lookahead.type is t                
+      lookahead = tokens.shift()                              #cojo el siguiente token
+      lookahead = null  if typeof lookahead is "undefined"    
     else # Error. Throw exception
       throw "Syntax Error. Expected #{t} found '" + 
             lookahead.value + "' near '" + 
@@ -160,26 +160,26 @@ parse = (input) ->
         left: result
         right: right
     result
-
-  term = ->
+  
+  term = ->                     #term -> factor'*'term | factor
     result = factor()
-    if lookahead and lookahead.type is "*"
-      match "*"
-      right = term()
+    if lookahead and lookahead.type is "*"    #si hay un * es k estamos en la primera regla
+      match "*"                               #casamos con *
+      right = term()                          #llamamos de forma recorsiva a term()
       result =
         type: "*"
         left: result
         right: right
     result
 
-  factor = ->
+  factor = ->                   
     result = null
-    if lookahead.type is "NUM"
+    if lookahead.type is "NUM"  #is es el === de javaScript
       result =
         type: "NUM"
         value: lookahead.value
 
-      match "NUM"
+      match "NUM"               #esperaba el token NUM dame el siguiente toque. Desues de match lookahead tiene el siguiente token
     else if lookahead.type is "ID"
       result =
         type: "ID"
@@ -188,7 +188,7 @@ parse = (input) ->
       match "ID"
     else if lookahead.type is "("
       match "("
-      result = expression()
+      result = expression()           #Expresion devuelve el arbol expression
       match ")"
     else # Throw exception
       throw "Syntax Error. Expected number or identifier or '(' but found " + 
