@@ -1,17 +1,19 @@
 require 'sinatra'
 require 'slim'
 require 'sass'
-require 'v8'
+require 'v8'                #motor de google para javascript
 require 'coffee-script'
 
-before do
+before do                   #ejemplo de filtro en sinatra. Se ejecuta antes de cada get (antes de cada ruta)
   set_title
 end
 
-helpers do
-  def css(*stylesheets)
-    stylesheets.map do |stylesheet| 
-      %Q{
+#recibe una lista de argumentos y devuelve una cadena con todos los links
+
+helpers do                                  #se utiliza para especificar los metodos que queramos que esten disponibles en una ruta
+  def css(*stylesheets)                     #pasamos una lista de argumentos
+    stylesheets.map do |stylesheet|   
+      %Q{                                   #una cadena de doble comillas
         <link href="/#{stylesheet}.css" 
               media="screen, projection" 
               rel="stylesheet" 
